@@ -1,0 +1,24 @@
+trigger:
+  branches:
+    include: ['*']
+
+pr:
+  branches:
+    include: ['*']
+
+pool:
+  vmImage: ubuntu-16.04
+
+variables:
+  BuildConfiguration: Release
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Azure Functions project
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: AzureAppService.LetsEncrypt/AzureAppService.LetsEncrypt.csproj
+      arguments: --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)
+      zipAfterPublish: true
+  - task: PublishBuildArtifacts@1
